@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Visualizing the Invisible</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      background: #050505;
+      color: white;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 60%, rgba(80, 80, 80, 0.25), transparent 45%),
+        linear-gradient(to bottom, #080808, #181818 55%, #050505);
+    }
+
+    /* Smoke */
+    .smoke {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      left: 50%;
+      top: 55%;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.10), transparent 40%),
+        radial-gradient(ellipse at 65% 35%, rgba(255,255,255,0.08), transparent 42%),
+        radial-gradient(ellipse at 50% 70%, rgba(255,255,255,0.09), transparent 45%);
+      filter: blur(35px);
+      animation: floatSmoke 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatSmoke {
+      from {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      to {
+        transform: translate(-50%, -53%) scale(1.08);
+      }
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      width: 90%;
+      max-width: 650px;
+      text-align: center;
+    }
+
+    .title {
+      font-size: clamp(38px, 8vw, 72px);
+      font-weight: normal;
+      font-style: italic;
+      letter-spacing: 2px;
+      line-height: 1.05;
+      text-shadow: 0 0 20px rgba(255,255,255,0.2);
+      margin-bottom: 30px;
+    }
+
+    .subtitle {
+      font-family: Arial, sans-serif;
+      font-size: clamp(14px, 3vw, 23px);
+      letter-spacing: 2px;
+      color: #9ee9e9;
+      line-height: 1.5;
+      margin-bottom: 70px;
+    }
+
+    .start-button {
+      display: inline-block;
+      padding: 25px 55px;
+      border: 1px solid rgba(255,255,255,0.8);
+      background: rgba(0,0,0,0.25);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .start-button:hover {
+      background: white;
+      color: black;
+      transform: scale(1.04);
+    }
+
+    .small-text {
+      margin-top: 25px;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 600px) {
+      .content {
+        width: 86%;
+      }
+
+      .subtitle {
+        margin-bottom: 55px;
+      }
+
+      .start-button {
+        width: 85%;
+        padding: 22px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="page">
+
+    <div class="smoke"></div>
+
+    <section class="content">
+
+      <h1 class="title">
+        VISUALIZING<br>
+        THE INVISIBLE
+      </h1>
+
+      <p class="subtitle">
+        REAL-TIME SMOKE IMPACT<br>
+        ON HUMAN LUNGS
+      </p>
+
+      <button class="start-button" onclick="startExperience()">
+        BEGIN DISCOVERY PROCESS
+      </button>
+
+      <p class="small-text">
+        AN INTERACTIVE EXPERIENCE
+      </p>
+
+    </section>
+
+  </main>
+
+  <script>
+    function startExperience() {
+      alert("Discovery Process Started");
+    }
+  </script>
+
+</body>
+</html>
