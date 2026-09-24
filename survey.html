@@ -592,50 +592,61 @@
 
   const scriptURL = "https://script.google.com/macros/s/AKfycbzcXKpDYMomKsBOoAS_a_CCnQckFK17ViZso7dsxWX0y8lAc6EW_BSf6cQNWMjwQvraRA/exec";
 
-async function submitForm() {
+  async function submitForm() {
 
-  // ตรวจ Q1-Q18
-  for (let i = 1; i <= 18; i++) {
-    const answer = document.querySelector(`input[name="q${i}"]:checked`);
+    // ตรวจ Q1-Q18
+    for (let i = 1; i <= 18; i++) {
 
-    if (!answer) {
-      alert(`กรุณาตอบคำถามข้อ ${i} ให้ครบ`);
-      return;
+      const answer =
+        document.querySelector(`input[name="q${i}"]:checked`);
+
+      if (!answer) {
+        alert(`กรุณาตอบคำถามข้อ ${i} ให้ครบ`);
+        return;
+      }
+    }
+
+    // เก็บคำตอบ
+    const data = {};
+
+    // Q1-Q18
+    for (let i = 1; i <= 18; i++) {
+
+      data[`q${i}`] =
+        document.querySelector(`input[name="q${i}"]:checked`).value;
+
+    }
+
+    // Q19-Q22
+    for (let i = 19; i <= 22; i++) {
+
+      data[`q${i}`] =
+        document.getElementById(`q${i}`).value;
+
+    }
+
+    try {
+
+      await fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(data)
+      });
+
+      alert("ส่งแบบประเมินเรียบร้อยแล้ว ขอบคุณสำหรับการประเมิน");
+
+    } catch (error) {
+
+      console.error(error);
+      alert("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่");
+
     }
   }
 
-  // เก็บคำตอบ
-  const data = {};
+</script>
 
-  // Q1-Q18
-  for (let i = 1; i <= 18; i++) {
-    data[`q${i}`] =
-      document.querySelector(`input[name="q${i}"]:checked`).value;
-  }
-
-  // Q19-Q22
-  for (let i = 19; i <= 22; i++) {
-    data[`q${i}`] = document.getElementById(`q${i}`).value;
-  }
-
-  try {
-
-    await fetch(scriptURL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify(data)
-    });
-
-    alert("ส่งแบบประเมินเรียบร้อยแล้ว ขอบคุณสำหรับการประเมิน");
-
-  } catch (error) {
-
-    console.error(error);
-    alert("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่");
-
-  }
-}
-
+</body>
+</html>
