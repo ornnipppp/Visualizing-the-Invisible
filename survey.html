@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Evaluation | Visualizing the Invisible</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: #050505;
+      color: white;
+      min-height: 100vh;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      width: 700px;
+      height: 700px;
+      left: 50%;
+      top: 40%;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.10), transparent 60%);
+      filter: blur(70px);
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(45px, 8vw, 80px);
+      letter-spacing: 4px;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .header p {
+      color: #b9eeee;
+      font-size: 14px;
+      line-height: 1.8;
+      letter-spacing: 1px;
+    }
+
+    .scale {
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 25px;
+      line-height: 2;
+    }
+
+    .section {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 25px;
+      backdrop-filter: blur(10px);
+    }
+
+    .section-title {
+      color: #9ee9e9;
+      font-size: 20px;
+      letter-spacing: 1px;
+      margin-bottom: 30px;
+    }
+
+    .question {
+      margin-bottom: 30px;
+    }
+
+    .question:last-child {
+      margin-bottom: 0;
+    }
+
+    .question-text {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .options label {
+      flex: 1;
+      min-width: 70px;
+      text-align: center;
+      padding: 12px 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      cursor: pointer;
+      color: #ccc;
+      transition: 0.25s;
+    }
+
+    .options label:hover {
+      border-color: #9ee9e9;
+      color: white;
+    }
+
+    .options input {
+      display: none;
+    }
+
+    .options input:checked + span {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .options label:has(input:checked) {
+      background: white;
+      color: black;
+      border-color: white;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 15px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      color: white;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #9ee9e9;
+    }
+
+    .submit-btn {
+      display: block;
+      margin: 40px auto 20px;
+      padding: 18px 55px;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+      background: #9ee9e9;
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(158,233,233,0.2);
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      color: #777;
+      text-decoration: none;
+      font-size: 12px;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    .back:hover {
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 25px 14px;
+      }
+
+      .section {
+        padding: 22px 18px;
+      }
+
+      .options label {
+        min-width: 55px;
+      }
+
+      .question-text {
+        font-size: 14px;
+      }
+
+      .header h1 {
+        font-size: 52px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>EVALUATION</h1>
+
+    <p>
+      แบบประเมินการทำงานของระบบ Interactive และประสบการณ์ผู้เข้าชม<br>
+      Visualizing the Invisible: Real-Time Smoke Impact on Human Lungs
+    </p>
+  </div>
+
+  <div class="scale">
+    ระดับความคิดเห็น<br>
+    5 = มากที่สุด　 4 = มาก　 3 = ปานกลาง　 2 = น้อย　 1 = น้อยที่สุด
+  </div>
+
+
+  <!-- SECTION 1 -->
+
+  <div class="section">
+
+    <h2 class="section-title">
+      01 — การตรวจจับและการทำงานของ Sensor
+    </h2>
+
+    <div class="question">
+      <p class="question-text">
+        1. ระบบสามารถตรวจจับการเป่าลมของผู้เข้าชมได้อย่างเหมาะสม
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q1" value="5"><span>5</span></label>
+        <label><input type="radio" name="q1" value="4"><span>4</span></label>
+        <label><input type="radio" name="q1" value="3"><span>3</span></label>
+        <label><input type="radio" name="q1" value="2"><span>2</span></label>
+        <label><input type="radio" name="q1" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        2. ระบบสามารถตรวจจับการเคลื่อนไหวของมือหรือร่างกายได้อย่างเหมาะสม
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q2" value="5"><span>5</span></label>
+        <label><input type="radio" name="q2" value="4"><span>4</span></label>
+        <label><input type="radio" name="q2" value="3"><span>3</span></label>
+        <label><input type="radio" name="q2" value="2"><span>2</span></label>
+        <label><input type="radio" name="q2" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        3. Sensor สามารถทำงานได้อย่างต่อเนื่องระหว่างการใช้งาน
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q3" value="5"><span>5</span></label>
+        <label><input type="radio" name="q3" value="4"><span>4</span></label>
+        <label><input type="radio" name="q3" value="3"><span>3</span></label>
+        <label><input type="radio" name="q3" value="2"><span>2</span></label>
+        <label><input type="radio" name="q3" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        4. ตำแหน่งการติดตั้ง Sensor มีความเหมาะสมต่อการใช้งาน
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q4" value="5"><span>5</span></label>
+        <label><input type="radio" name="q4" value="4"><span>4</span></label>
+        <label><input type="radio" name="q4" value="3"><span>3</span></label>
+        <label><input type="radio" name="q4" value="2"><span>2</span></label>
+        <label><input type="radio" name="q4" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- SECTION 2 -->
+
+  <div class="section">
+
+    <h2 class="section-title">
+      02 — การตอบสนองของระบบ
+    </h2>
+
+    <div class="question">
+      <p class="question-text">
+        5. ระบบตอบสนองต่อการเป่าลมได้อย่างรวดเร็ว
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q5" value="5"><span>5</span></label>
+        <label><input type="radio" name="q5" value="4"><span>4</span></label>
+        <label><input type="radio" name="q5" value="3"><span>3</span></label>
+        <label><input type="radio" name="q5" value="2"><span>2</span></label>
+        <label><input type="radio" name="q5" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        6. ระบบตอบสนองต่อการเคลื่อนไหวของผู้เข้าชมได้อย่างรวดเร็ว
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q6" value="5"><span>5</span></label>
+        <label><input type="radio" name="q6" value="4"><span>4</span></label>
+        <label><input type="radio" name="q6" value="3"><span>3</span></label>
+        <label><input type="radio" name="q6" value="2"><span>2</span></label>
+        <label><input type="radio" name="q6" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        7. การเปลี่ยนแปลงของ Visual มีความสัมพันธ์กับการกระทำของผู้เข้าชม
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q7" value="5"><span>5</span></label>
+        <label><input type="radio" name="q7" value="4"><span>4</span></label>
+        <label><input type="radio" name="q7" value="3"><span>3</span></label>
+        <label><input type="radio" name="q7" value="2"><span>2</span></label>
+        <label><input type="radio" name="q7" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        8. การแสดงผลแบบ Real-time มีความเหมาะสม
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q8" value="5"><span>5</span></label>
+        <label><input type="radio" name="q8" value="4"><span>4</span></label>
+        <label><input type="radio" name="q8" value="3"><span>3</span></label>
+        <label><input type="radio" name="q8" value="2"><span>2</span></label>
+        <label><input type="radio" name="q8" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        9. ระบบสามารถตอบสนองต่อการปฏิสัมพันธ์ได้อย่างต่อเนื่อง
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q9" value="5"><span>5</span></label>
+        <label><input type="radio" name="q9" value="4"><span>4</span></label>
+        <label><input type="radio" name="q9" value="3"><span>3</span></label>
+        <label><input type="radio" name="q9" value="2"><span>2</span></label>
+        <label><input type="radio" name="q9" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- SECTION 3 -->
+
+  <div class="section">
+
+    <h2 class="section-title">
+      03 — การแสดงผลและ Interactive Visual
+    </h2>
+
+    <div class="question">
+      <p class="question-text">
+        10. การเปลี่ยนแปลงของแบบจำลองปอดสอดคล้องกับการปฏิสัมพันธ์
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q10" value="5"><span>5</span></label>
+        <label><input type="radio" name="q10" value="4"><span>4</span></label>
+        <label><input type="radio" name="q10" value="3"><span>3</span></label>
+        <label><input type="radio" name="q10" value="2"><span>2</span></label>
+        <label><input type="radio" name="q10" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        11. การเคลื่อนที่ของ Particle ควันสอดคล้องกับการเคลื่อนไหวของมือหรือร่างกาย
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q11" value="5"><span>5</span></label>
+        <label><input type="radio" name="q11" value="4"><span>4</span></label>
+        <label><input type="radio" name="q11" value="3"><span>3</span></label>
+        <label><input type="radio" name="q11" value="2"><span>2</span></label>
+        <label><input type="radio" name="q11" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        12. Visual สามารถแสดงผลลัพธ์ของการปฏิสัมพันธ์ได้อย่างชัดเจน
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q12" value="5"><span>5</span></label>
+        <label><input type="radio" name="q12" value="4"><span>4</span></label>
+        <label><input type="radio" name="q12" value="3"><span>3</span></label>
+        <label><input type="radio" name="q12" value="2"><span>2</span></label>
+        <label><input type="radio" name="q12" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        13. การทำงานร่วมกันระหว่าง Sensor และ Visual มีความเหมาะสม
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q13" value="5"><span>5</span></label>
+        <label><input type="radio" name="q13" value="4"><span>4</span></label>
+        <label><input type="radio" name="q13" value="3"><span>3</span></label>
+        <label><input type="radio" name="q13" value="2"><span>2</span></label>
+        <label><input type="radio" name="q13" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- SECTION 4 -->
+
+  <div class="section">
+
+    <h2 class="section-title">
+      04 — ประสบการณ์ของผู้เข้าชม
+    </h2>
+
+    <div class="question">
+      <p class="question-text">
+        14. ผู้เข้าชมสามารถเข้าใจวิธีการใช้งานระบบได้โดยไม่ต้องได้รับคำอธิบายที่ซับซ้อน
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q14" value="5"><span>5</span></label>
+        <label><input type="radio" name="q14" value="4"><span>4</span></label>
+        <label><input type="radio" name="q14" value="3"><span>3</span></label>
+        <label><input type="radio" name="q14" value="2"><span>2</span></label>
+        <label><input type="radio" name="q14" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        15. การปฏิสัมพันธ์ช่วยสร้างการมีส่วนร่วมกับนิทรรศการ
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q15" value="5"><span>5</span></label>
+        <label><input type="radio" name="q15" value="4"><span>4</span></label>
+        <label><input type="radio" name="q15" value="3"><span>3</span></label>
+        <label><input type="radio" name="q15" value="2"><span>2</span></label>
+        <label><input type="radio" name="q15" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        16. ผู้เข้าชมสามารถรับรู้ผลลัพธ์จากการกระทำของตนเองได้อย่างชัดเจน
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q16" value="5"><span>5</span></label>
+        <label><input type="radio" name="q16" value="4"><span>4</span></label>
+        <label><input type="radio" name="q16" value="3"><span>3</span></label>
+        <label><input type="radio" name="q16" value="2"><span>2</span></label>
+        <label><input type="radio" name="q16" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        17. การกระทำของผู้เข้าชมและผลลัพธ์ที่ปรากฏบนหน้าจอมีความต่อเนื่องกัน
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q17" value="5"><span>5</span></label>
+        <label><input type="radio" name="q17" value="4"><span>4</span></label>
+        <label><input type="radio" name="q17" value="3"><span>3</span></label>
+        <label><input type="radio" name="q17" value="2"><span>2</span></label>
+        <label><input type="radio" name="q17" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        18. ระบบ Interactive ช่วยสนับสนุนประสบการณ์การเข้าชมนิทรรศการโดยรวม
+      </p>
+
+      <div class="options">
+        <label><input type="radio" name="q18" value="5"><span>5</span></label>
+        <label><input type="radio" name="q18" value="4"><span>4</span></label>
+        <label><input type="radio" name="q18" value="3"><span>3</span></label>
+        <label><input type="radio" name="q18" value="2"><span>2</span></label>
+        <label><input type="radio" name="q18" value="1"><span>1</span></label>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- SECTION 5 -->
+
+  <div class="section">
+
+    <h2 class="section-title">
+      05 — ข้อเสนอแนะ
+    </h2>
+
+    <div class="question">
+      <p class="question-text">
+        19. ท่านคิดว่าส่วนใดของระบบ Interactive ที่ทำงานได้ดีหรือมีความน่าสนใจมากที่สุด
+      </p>
+
+      <textarea id="q19" placeholder="กรุณาระบุความคิดเห็น"></textarea>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        20. ท่านพบปัญหาในการใช้งานระบบหรือไม่ หากพบ โปรดระบุ
+      </p>
+
+      <textarea id="q20" placeholder="กรุณาระบุความคิดเห็น"></textarea>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        21. ท่านมีข้อเสนอแนะในการปรับปรุงระบบ Interactive หรือการตอบสนองของระบบอย่างไร
+      </p>
+
+      <textarea id="q21" placeholder="กรุณาระบุความคิดเห็น"></textarea>
+    </div>
+
+    <div class="question">
+      <p class="question-text">
+        22. มีข้อเสนอแนะอื่น ๆ ที่ต้องการเพิ่มเติมหรือไม่
+      </p>
+
+      <textarea id="q22" placeholder="กรุณาระบุความคิดเห็น"></textarea>
+    </div>
+
+  </div>
+
+
+  <button class="submit-btn" onclick="submitForm()">
+    SUBMIT EVALUATION
+  </button>
+
+  <a href="index.html" class="back">
+    ← BACK TO HOME
+  </a>
+
+</div>
+
+
+<script>
+
+function submitForm() {
+
+  // ตรวจว่าตอบข้อ 1–18 ครบหรือยัง
+  for (let i = 1; i <= 18; i++) {
+
+    const answer = document.querySelector(
+      'input[name="q' + i + '"]:checked'
+    );
+
+    if (!answer) {
+      alert("กรุณาตอบคำถามข้อ " + i + " ให้ครบ");
+      return;
+    }
+  }
+
+  alert("ขอบคุณสำหรับการประเมิน");
+
+}
+
+</script>
+
+</body>
+</html>
